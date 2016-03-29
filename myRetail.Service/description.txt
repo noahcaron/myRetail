@@ -1,0 +1,4 @@
+﻿The project myRetail.DataLayer is the data layer that uses Entity Framework to attach to the Products.mdf database. The associated
+test project has tests to see that all the CRUD operations are working correctly to the database. The myRetail.RestService project uses
+Web API and has one controller called ProductsController.cs that has the operations for inserting, updated, and deleting products via the data layer.
+It also has a test project to test the controller methods.

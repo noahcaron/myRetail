@@ -1,0 +1,224 @@
+﻿
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Product Manager AngularJS SPA</title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a ui-sref="home">Home</a></li>
+                    <li><a ui-sref="about">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="jumbotron">
+        <center>
+            <h1>
+               myRetail Product Manager
+            </h1>
+        </center>
+    </div>
+
+    <div ng-app="ProductApp" ng-controller="ProductCtrl">
+        <div class="container">
+            <h2>All Products</h2>
+
+            <div ng-show="error" class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <p>{{ error }}</p>
+            </div>
+
+            <p><a data-ng-click="showadd()" href="javascript:;" class="btn btn-primary">Add New Product</a></p>
+
+            <table class="table table-hover">
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>SKU</th>
+                    <th>Last Updated</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                </tr>
+
+                <tr data-ng-repeat="product in Products">
+                    <td>
+                        <p>
+                            <a data-ng-click="get(product)" href="javascript:;">View</a> |
+                            <a data-ng-click="edit(product)" href="javascript:;">Edit</a> |
+                            <a data-ng-click="showconfirm(product, $index)" href="javascript:;">Delete</a>
+                        </p>
+                    </td>
+                    <td>
+                        <p>{{ product.name}}</p>
+
+                    </td>
+                    <td>
+                        <p>{{ product.sku }}</p>
+
+                    </td>
+                    <td>
+                        <p>{{ product.last_updated | date:'MM/dd/yyyy' }}</p>
+
+                    </td>
+                    <td>
+                        <p>{{ product.category }}</p>
+                    </td>
+                    <td>
+                        <p>{{ product.price }}</p>
+                    </td>
+                </tr>
+            </table>
+            <hr />
+
+            <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                            <h4 class="modal-title" id="myModalLabel" ng-hide="editMode">Add product</h4>
+                            <h4 class="modal-title" id="myModalLabel" ng-show="editMode">Edit product</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" name="addproductform">
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" data-ng-model="product.name" class="form-control" id="title" placeholder="Name" required title="Enter first name" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">SKU</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" data-ng-model="product.sku" class="form-control" id="title" placeholder="SKU" required title="Enter last name" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">Last Updated</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" data-ng-model="product.last_updated" class="form-control" id="title" placeholder="Last Updated" required title="Enter Last Updated" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">category</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" data-ng-model="product.category" class="form-control" id="title" placeholder="category" required title="Enter category" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">price</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" data-ng-model="product.price" class="form-control" id="title" placeholder="price" required title="Enter price" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <span ng-hide="editMode">
+                                            <input type="submit" value="Add" ng-disabled="addproductform.$invalid" data-ng-click="add()" class="btn btn-primary" />
+                                        </span>
+                                        <span ng-show="editMode">
+                                            <input type="submit" value="Update" ng-disabled="addproductform.$invalid" data-ng-click="update()" class="btn btn-primary" />
+                                        </span>
+                                        <input type="button" value="Cancel" data-ng-click="cancel()" class="btn btn-primary" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                            <h4 class="modal-title" id="myModalLabel">View Product</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" name="viewproduct">
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-2 control-label">Name</label>
+                                    <div class="col-sm-10">
+                                        {{product.name}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sku" class="col-sm-2 control-label">SKU</label>
+                                    <div class="col-sm-10">
+                                        {{product.sku}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_updated" class="col-sm-2 control-label">Last Updated</label>
+                                    <div class="col-sm-10">
+                                        {{product.last_updated  | date:'MM/dd/yyyy'}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="category" class="col-sm-2 control-label">category</label>
+                                    <div class="col-sm-10">
+                                        {{product.category}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="price" class="col-sm-2 control-label">price</label>
+                                    <div class="col-sm-10">
+                                        {{product.price}}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                            <h4 class="modal-title" id="myModalLabel">Confirm Action</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete the product?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-ng-click="delete()">Ok</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="scripts/libs/jquery-1.10.2.js"></script>
+    <script src="scripts/libs/angular.js"></script>
+    <script src="scripts/libs/bootstrap.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/product-controller.js"></script>
+    <script src="scripts/services/productService.js"></script>
+</body>
+
+
+</html>
+
+
